@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: staging
+    database: dbt_merge_table
+    schema: STAGING
+    tables:
+      - name: stg_customer
+      - name: tombstone_customer

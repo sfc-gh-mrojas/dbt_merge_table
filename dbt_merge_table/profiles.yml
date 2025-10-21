@@ -1,0 +1,11 @@
+dbt_merge_table:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      role: ACCOUNTADMIN
+      warehouse: COMPUTE_WH
+      database: DBT_MERGE_TABLE
+      schema: MART
+      account: ' '
+      user: ' '

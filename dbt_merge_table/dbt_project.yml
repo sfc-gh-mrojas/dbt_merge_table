@@ -1,0 +1,13 @@
+name: dbt_merge_table
+version: 1.0.0
+config-version: 2
+profile: dbt_merge_table
+model-paths:
+  - models
+test-paths:
+  - tests
+macro-paths:
+  - macros
+models:
+  dbt_merge_table:
+    +materialized: view
