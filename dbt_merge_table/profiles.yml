@@ -6,6 +6,6 @@ dbt_merge_table:
       role: ACCOUNTADMIN
       warehouse: COMPUTE_WH
       database: DBT_MERGE_TABLE
-      schema: MART
+      schema: MARTS
       account: ' '
       user: ' '

@@ -1,10 +1,10 @@
 -- CDC demonstration for customer_clean
 -- Run the statements step-by-step and execute dbt between steps as indicated.
-
+use database dbt_merge_table;
 -- STEP 0: Reset sample data (optional for a clean slate)
 truncate table STAGING.STG_CUSTOMER;
 truncate table STAGING.TOMBSTONE_CUSTOMER;
-truncate table MART.CUSTOMER_CLEAN;
+truncate table MARTS.CUSTOMER_CLEAN;
 
 -- STEP 1: Initial inserts (no deletes yet)
 insert into STAGING.STG_CUSTOMER (CUSTOMER_ID, NAME, EMAIL, UPDATED_AT) values
@@ -14,6 +14,7 @@ insert into STAGING.STG_CUSTOMER (CUSTOMER_ID, NAME, EMAIL, UPDATED_AT) values
 
 -- Now run a full-refresh to initialize the mart table:
 --   dbt run --full-refresh --select marts.customer_clean
+
 
 -- STEP 2: Delete events (including a tombstone-only delete) and an update
 -- Delete Alice (1), Bob (2), and emit a tombstone-only delete for id 3
@@ -44,6 +45,6 @@ insert into STAGING.TOMBSTONE_CUSTOMER (CUSTOMER_ID, DELETED_AT) values
 --   dbt run --select marts.customer_clean
 
 -- STEP 4: Inspect results
-select * from MART.CUSTOMER_CLEAN order by CUSTOMER_ID;
+select * from MARTS.CUSTOMER_CLEAN order by CUSTOMER_ID;
 
 

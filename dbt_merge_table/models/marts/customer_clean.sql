@@ -3,7 +3,7 @@
     unique_key='customer_id',
     incremental_strategy='merge',
     database='dbt_merge_table',
-    schema='mart',
+    schema='marts',
     post_hook=[
       "{% if not flags.FULL_REFRESH %} \
       delete from {{ this }} \
