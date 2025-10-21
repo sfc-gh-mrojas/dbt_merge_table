@@ -27,7 +27,7 @@ tombstone as (
     from {{ source('staging', 'tombstone_customer') }}
     group by customer_id
 ),
-merged as (
+base_with_delete_flag as (
     select
         b.customer_id,
         b.name,
@@ -39,5 +39,34 @@ merged as (
     from base b
     left join tombstone t
         on b.customer_id = t.customer_id
+),
+-- Include tombstone-only rows so incremental MERGE can delete existing targets
+tombstone_only as (
+    select
+        t.customer_id,
+        cast(null as varchar) as name,
+        cast(null as varchar) as email,
+        cast(null as timestamp_ntz) as updated_at,
+        true as deleted_flag
+    from tombstone t
+    left join base b
+        on t.customer_id = b.customer_id
+    where b.customer_id is null
+),
+merged as (
+    select * from base_with_delete_flag
+    union all
+    select * from tombstone_only
 )
+{% if flags.FULL_REFRESH %}
+select
+    customer_id,
+    name,
+    email,
+    updated_at,
+    deleted_flag
+from merged
+where deleted_flag = false
+{% else %}
 select * from merged
+{% endif %}
